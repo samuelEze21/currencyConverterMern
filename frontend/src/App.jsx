@@ -26,10 +26,8 @@ function App() {
 
     // to call the api
     try {
-      const response = await axios.post(
-        'http://localhost:5000/api/convert',
-         formData
-        );
+      const response = await axios.post('https://currencyconvertermern.onrender.com/api/convert', formData);
+
         setResult(response?.data);
         setError("");
 

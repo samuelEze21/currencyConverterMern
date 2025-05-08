@@ -3,7 +3,7 @@ const express = require('express');
 const axios = require('axios');
 const cors = require('cors');
 const rateLimit = require("express-rate-limit")
-const PORT = process.env.PORT || 5000; 
+const PORT = process.env.PORT || 5010; 
 const app = express(); 
 
 const API_URL = 'https://v6.exchangerate-api.com/v6/'
@@ -14,14 +14,35 @@ const apiLimiter = rateLimit({
     max: 100, 
 })
 
-
-// cors options
 const corsOptions = {
-    origin:'http://localhost:5173', 
-    methods: ['GET', 'POST', 'OPTIONS'], // Explicitly allow methods
+    origin: function (origin, callback) {
+      const allowedOrigins = [
+        'https://currency-converter-mern.vercel.app', // Deployed frontend
+      ];
+      // Allow requests with no origin (like mobile apps or curl requests)
+      if (!origin) return callback(null, true);
+      if (
+        allowedOrigins.includes(origin) ||
+        /^http:\/\/localhost:\d+$/.test(origin)
+      ) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
+    methods: ['GET', 'POST', 'OPTIONS'],
     allowedHeaders: ['Content-Type'],
-    credentials: true 
-}
+    credentials: true,
+  };
+
+  
+// // cors options
+// const corsOptions = {
+//     origin:['https://currency-converter-mern.vercel.app', 'http://localhost:5173'],
+//     methods: ['GET', 'POST', 'OPTIONS'], // Explicitly allow methods
+//     allowedHeaders: ['Content-Type'],
+//     credentials: true 
+// }
 
 
 
